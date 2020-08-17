@@ -1,0 +1,38 @@
+[
+  {
+    "user": {
+      "id": "test-reviewer-id",
+      "login": "test-reviewer-name",
+      "avatar_url": "test-reviewer-avatar",
+      "html_url": "test-reviewer-url"
+    },
+    "state": "APPROVED"
+  },
+  {
+    "user": {
+      "id": "test-reviewer-id",
+      "login": "test-reviewer-name",
+      "avatar_url": "test-reviewer-avatar",
+      "html_url": "test-reviewer-url"
+    },
+    "state": "COMMENTED"
+  },
+  {
+    "user": {
+      "id": "test-reviewer-id-2",
+      "login": "test-reviewer-name-2",
+      "avatar_url": "test-reviewer-avatar-2",
+      "html_url": "test-reviewer-url-2"
+    },
+    "state": "COMMENTED"
+  },
+  {
+    "user": {
+      "id": "test-reviewer-id-2",
+      "login": "test-reviewer-name-2",
+      "avatar_url": "test-reviewer-avatar-2",
+      "html_url": "test-reviewer-url-2"
+    },
+    "state": "APPROVED"
+  }
+]

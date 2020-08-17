@@ -49,6 +49,7 @@ describe('sync/pull-request', () => {
 
     const job = createJob({ data: { installationId, jiraHost } });
 
+    const reviews = require('../../fixtures/api/reviews-single.json');
     const pullRequestList = JSON.parse(JSON.stringify(require('../../fixtures/api/pull-request-list.json')));
     pullRequestList[0].title = '[TES-15] Evernote Test';
 
@@ -57,6 +58,8 @@ describe('sync/pull-request', () => {
       .reply(200, pullRequestList);
     nock('https://api.github.com').get('/repos/integrations/test-repo-name/pulls/51')
       .reply(200, { comments: 0 });
+    nock('https://api.github.com').get('/repos/integrations/test-repo-name/pulls/51/reviews')
+      .reply(200, reviews);
 
 
     const queues = {
@@ -81,6 +84,12 @@ describe('sync/pull-request', () => {
                 name: 'bkeepers',
                 url: 'https://api.github.com/users/bkeepers',
               },
+              reviewers: [{
+                name: 'test-reviewer-name',
+                url: 'test-reviewer-url',
+                avatar: 'test-reviewer-avatar',
+                approved: true,
+              }],
               commentCount: 0,
               destinationBranch: 'test-repo-url/tree/devel',
               displayId: '#51',

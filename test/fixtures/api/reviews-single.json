@@ -1,0 +1,11 @@
+[
+  {
+    "user": {
+      "id": "test-reviewer-id",
+      "login": "test-reviewer-name",
+      "avatar_url": "test-reviewer-avatar",
+      "html_url": "test-reviewer-url"
+    },
+    "state": "APPROVED"
+  }
+]

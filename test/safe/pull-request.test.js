@@ -2,6 +2,7 @@ describe('GitHub Actions', () => {
   describe('pull_request', () => {
     it('should update the Jira issue with the linked GitHub pull_request', async () => {
       const payload = require('../fixtures/pull-request-basic.json');
+      const reviews = require('../fixtures/api/reviews-single.json');
 
       const jiraApi = td.api('https://test-atlassian-instance.net');
       const githubApi = td.api('https://api.github.com');
@@ -19,6 +20,8 @@ describe('GitHub Actions', () => {
             summary: 'Example Issue',
           },
         });
+
+      td.when(githubApi.get('/repos/test-repo-owner/test-repo-name/pulls/1/reviews')).thenReturn(reviews);
 
       Date.now = jest.fn(() => 12345678);
 
@@ -67,6 +70,14 @@ describe('GitHub Actions', () => {
                   avatar: 'test-pull-request-author-avatar',
                   url: 'test-pull-request-author-url',
                 },
+                reviewers: [
+                  {
+                    name: 'test-reviewer-name',
+                    url: 'test-reviewer-url',
+                    avatar: 'test-reviewer-avatar',
+                    approved: true,
+                  },
+                ],
                 commentCount: 'test-pull-request-comment-count',
                 destinationBranch: 'test-pull-request-base-url/tree/test-pull-request-base-ref',
                 displayId: '#1',
@@ -93,6 +104,7 @@ describe('GitHub Actions', () => {
 
     it('should not update the Jira issue if the source repo of a pull_request was deleted', async () => {
       const payload = require('../fixtures/pull-request-null-repo.json');
+      const reviews = require('../fixtures/api/reviews-single.json');
 
       const githubApi = td.api('https://api.github.com');
 
@@ -102,6 +114,8 @@ describe('GitHub Actions', () => {
         html_url: 'test-pull-request-author-url',
       });
 
+      td.when(githubApi.get('/repos/test-repo-owner/test-repo-name/pulls/1/reviews')).thenReturn(reviews);
+
       Date.now = jest.fn(() => 12345678);
 
       // should not throw
@@ -110,6 +124,7 @@ describe('GitHub Actions', () => {
 
     it('should delete the reference to a pull request when issue keys are removed from the title', async () => {
       const payload = require('../fixtures/pull-request-remove-keys.json');
+      const reviews = require('../fixtures/api/reviews-single.json');
       const { repository, pull_request: pullRequest } = payload.payload;
       const githubApi = td.api('https://api.github.com');
       const jiraApi = td.api('https://test-atlassian-instance.net');
@@ -120,6 +135,8 @@ describe('GitHub Actions', () => {
         html_url: 'test-pull-request-author-url',
       });
 
+      td.when(githubApi.get('/repos/test-repo-owner/test-repo-name/pulls/1/reviews')).thenReturn(reviews);
+
       Date.now = jest.fn(() => 12345678);
 
       await app.receive(payload);
@@ -129,6 +146,7 @@ describe('GitHub Actions', () => {
 
     it('will not delete references if a branch still has an issue key', async () => {
       const payload = require('../fixtures/pull-request-test-changes-with-branch.json');
+      const reviews = require('../fixtures/api/reviews-single.json');
 
       const jiraApi = td.api('https://test-atlassian-instance.net');
       const githubApi = td.api('https://api.github.com');
@@ -138,6 +156,8 @@ describe('GitHub Actions', () => {
         avatar_url: 'test-pull-request-author-avatar',
         html_url: 'test-pull-request-author-url',
       });
+
+      td.when(githubApi.get('/repos/test-repo-owner/test-repo-name/pulls/1/reviews')).thenReturn(reviews);
 
       Date.now = jest.fn(() => 12345678);
 
@@ -179,6 +199,14 @@ describe('GitHub Actions', () => {
                   name: 'test-pull-request-author-login',
                   url: 'test-pull-request-author-url',
                 },
+                reviewers: [
+                  {
+                    name: 'test-reviewer-name',
+                    url: 'test-reviewer-url',
+                    avatar: 'test-reviewer-avatar',
+                    approved: true,
+                  },
+                ],
                 commentCount: 'test-pull-request-comment-count',
                 destinationBranch: 'test-pull-request-base-url/tree/pull-request-base-ref',
                 displayId: '#1',

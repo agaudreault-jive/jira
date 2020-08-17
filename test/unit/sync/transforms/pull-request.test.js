@@ -1,7 +1,8 @@
 const transformPullRequest = require('../../../../lib/sync/transforms/pull-request');
 
-describe('pull_request transform', () => {
+describe('sync/transforms/pull_request', () => {
   it('should send the ghost user to Jira when GitHub user has been deleted', async () => {
+    const reviews = require('../../../fixtures/api/reviews-single.json');
     const pullRequestList = JSON.parse(JSON.stringify(require('../../../fixtures/api/pull-request-list.json')));
     pullRequestList[0].title = '[TES-123] Evernote Test';
     const payload = {
@@ -18,6 +19,7 @@ describe('pull_request transform', () => {
     const githubMock = {
       pulls: {
         get: () => ({ data: { comments: 1 } }),
+        listReviewRequests: () => ({ data: reviews }),
       },
     };
 
@@ -36,6 +38,12 @@ describe('pull_request transform', () => {
             name: 'Deleted User',
             url: 'https://github.com/ghost',
           },
+          reviewers: [{
+            name: 'test-reviewer-name',
+            url: 'test-reviewer-url',
+            avatar: 'test-reviewer-avatar',
+            approved: true,
+          }],
           commentCount: 1,
           destinationBranch: 'https://github.com/test-owner/test-repo/tree/devel',
           displayId: '#51',
@@ -58,7 +66,7 @@ describe('pull_request transform', () => {
 
   it('should return no data if there are no issue keys', () => {
     const payload = {
-      pull_request: {
+      pullRequest: {
         author: null,
         databaseId: 1234568,
         comments: {
@@ -91,7 +99,7 @@ describe('pull_request transform', () => {
 
     Date.now = jest.fn(() => 12345678);
 
-    const { data } = transformPullRequest(payload, payload.pull_request.author);
+    const { data } = transformPullRequest(payload, payload.pullRequest.author);
     expect(data).toBeUndefined();
   });
 });
