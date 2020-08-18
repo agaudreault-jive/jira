@@ -19,7 +19,7 @@ describe('sync/transforms/pull_request', () => {
     const githubMock = {
       pulls: {
         get: () => ({ data: { comments: 1 } }),
-        listReviewRequests: () => ({ data: reviews }),
+        listReviews: () => ({ data: reviews }),
       },
     };
 
