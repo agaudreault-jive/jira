@@ -32,7 +32,7 @@
     "express-sslify": "^1.2.0",
     "express-validator": "^6.4.1",
     "helmet": "^3.21.2",
-    "hot-shots": "^7.4.1",
+    "hot-shots": "^8.4.0",
     "ioredis": "^4.16.3",
     "markdown": "^0.5.0",
     "moment": "^2.24.0",
